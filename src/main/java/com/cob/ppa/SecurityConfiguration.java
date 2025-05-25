@@ -1,6 +1,7 @@
 package com.cob.ppa;
 
 import com.cob.ppa.filter.JwtAuthenticationFilter;
+import com.cob.ppa.filter.RequestLoggingFilter;
 import com.cob.ppa.service.security.CustomUserDetailsService;
 import com.cob.ppa.service.security.JwtAuthenticationEntryPoint;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+    @Autowired
+    private RequestLoggingFilter requestLoggingFilter;
     @Autowired
     private CustomUserDetailsService userDetailsService;
 
@@ -50,6 +53,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http
                 .cors().and()
                 .csrf().disable()
+                .addFilterBefore(requestLoggingFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling()
                 .authenticationEntryPoint(unauthorizedHandler)
                 .and()

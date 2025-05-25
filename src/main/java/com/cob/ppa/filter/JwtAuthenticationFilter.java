@@ -1,13 +1,11 @@
 package com.cob.ppa.filter;
 
-import com.cob.ppa.service.security.CustomUserDetailsService;
 import com.cob.ppa.util.security.JwtTokenUtil;
 import io.jsonwebtoken.Claims;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.MDC;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -18,7 +16,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
@@ -62,7 +59,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                     authentication.setDetails(
                             new WebAuthenticationDetailsSource().buildDetails(request));
+                    MDC.put("username", authentication.getName());
 
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
             }
