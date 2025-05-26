@@ -34,7 +34,7 @@ public class FindPatientRecordImportService {
         return PatientRecordBuilder.build(total,models);
     }
 
-        public PatientRecordJobResponse search(Pageable pageable , BatchStatus status, String pmrbId, LocalDateTime start, LocalDateTime end, String userName){
+        public PatientRecordJobResponse search(Pageable pageable , BatchStatus status, String pmrbId, LocalDateTime start, LocalDateTime end){
         Page<PatientRecordImportJob> pages = patientRecordJobRepository.search(pageable, status,pmrbId,start,end);
         List<PatientRecordImportJobDTO> models = pages.getContent()
                 .stream()

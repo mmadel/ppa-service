@@ -37,7 +37,6 @@ public class BatchesController {
     @GetMapping("/pmr/search")
     public ResponseEntity searchPatientMedicalRecordsBatch(@RequestParam(name = "offset", required = false) String offset,
                                                            @RequestParam(name = "limit", required = false) String limit,
-                                                           @RequestParam(name = "user-name", required = false) String userName,
                                                            @RequestParam(name = "status", required = false) BatchStatus status,
                                                            @RequestParam(name = "pmrbId", required = false) String pmrbId,
                                                            @RequestParam(name = "created-at" , required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate createdAt) {
@@ -49,7 +48,7 @@ public class BatchesController {
             end = createdAt.atTime(LocalTime.MAX);
         }
         return ResponseEntity.ok()
-                .body(findPatientRecordImportService.search(paging, status, pmrbId, start, end, userName));
+                .body(findPatientRecordImportService.search(paging, status, pmrbId, start, end));
     }
 
     @GetMapping("/cer/get/pmrbId/{pmrbId}")
