@@ -1,6 +1,6 @@
 package com.cob.ppa.constant;
 
-public enum BatchStatus {
+public enum RequestStatus {
     Pending,
     Ready,
     Failed

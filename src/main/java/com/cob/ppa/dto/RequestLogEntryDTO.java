@@ -8,11 +8,14 @@ import java.time.LocalDateTime;
 
 @Setter
 @Getter
-public class ClinicBatchDto {
+public class RequestLogEntryDTO {
     private Long id;
-    private String name;
+    private String username;
+
+    private String requestId;
+
     private RequestStatus status;
     private LocalDateTime createdAt;
-    private LocalDateTime completedAt;
-    private String referenceKey;
+    private LocalDateTime updatedAt;
+    private String errorMessage;
 }

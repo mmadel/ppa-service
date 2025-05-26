@@ -1,6 +1,7 @@
-package com.cob.ppa.service.batch;
+package com.cob.ppa.service.batch.configuration;
 
-import com.cob.ppa.service.batch.status.PatientRecordImportTracker;
+import com.cob.ppa.constant.RequestStatus;
+import com.cob.ppa.service.tracker.RequestTrackerService;
 import org.springframework.batch.core.BatchStatus;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobExecutionListener;
@@ -11,27 +12,29 @@ import java.util.stream.Collectors;
 
 @Component
 public class ImportJobListener implements JobExecutionListener {
+
     @Autowired
-    private PatientRecordImportTracker tracker;
+    RequestTrackerService requestTrackerService;
 
     private long jobId;
     @Override
     public void beforeJob(JobExecution jobExecution) {
 
         String pmrbId = jobExecution.getJobParameters().getString("pmrb-id");
-        jobId = tracker.insertPendingStatus(pmrbId);
+//        jobId = tracker.insertPendingStatus(pmrbId);
+        requestTrackerService.initRequest(pmrbId);
     }
 
     @Override
     public void afterJob(JobExecution jobExecution) {
         String pmrbId = jobExecution.getJobParameters().getString("pmrb-id");
         if (jobExecution.getStatus() == BatchStatus.COMPLETED) {
-            tracker.setReady(pmrbId, com.cob.ppa.constant.BatchStatus.Ready.name());
+            requestTrackerService.setCompleted(pmrbId);
         } else {
             String errorMessage = jobExecution.getAllFailureExceptions().stream()
                     .map(Throwable::getMessage)
                     .collect(Collectors.joining("; "));
-            tracker.setFailed(pmrbId,  com.cob.ppa.constant.BatchStatus.Failed.name(),errorMessage);
+            requestTrackerService.setFailed(pmrbId,errorMessage);
         }
     }
 }

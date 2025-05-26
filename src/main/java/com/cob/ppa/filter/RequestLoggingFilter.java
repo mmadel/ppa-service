@@ -1,9 +1,7 @@
 package com.cob.ppa.filter;
 
-import com.cob.ppa.service.monitor.RequestMonitorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -18,8 +16,6 @@ import java.io.IOException;
 @Component
 public class RequestLoggingFilter extends OncePerRequestFilter {
     private static final Logger logger = LoggerFactory.getLogger(RequestLoggingFilter.class);
-    @Autowired
-    RequestMonitorService requestMonitorService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -45,6 +41,7 @@ public class RequestLoggingFilter extends OncePerRequestFilter {
         }
 
     }
+
     private String getUsernameFromRequest(HttpServletRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated()) {
