@@ -1,6 +1,6 @@
 package com.cob.ppa.response.patient.record.model;
 
-import com.cob.ppa.dto.PatientRecordImportJobDTO;
+import com.cob.ppa.dto.RequestLogEntryDTO;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,5 +14,5 @@ public class PatientRecordJobResponse {
     Integer number_of_records;
     Integer number_of_matching_records;
 
-    List<PatientRecordImportJobDTO> records;
+    List<RequestLogEntryDTO> records;
 }

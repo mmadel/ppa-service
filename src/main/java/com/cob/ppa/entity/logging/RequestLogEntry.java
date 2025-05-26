@@ -1,5 +1,6 @@
 package com.cob.ppa.entity.logging;
 
+import com.cob.ppa.constant.RequestStatus;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,13 +19,17 @@ public class RequestLogEntry {
 
     private String requestId;
 
-    private Integer status;
+    @Enumerated(EnumType.STRING)
+    private RequestStatus status;
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     @Column(nullable = false)
     private LocalDateTime updatedAt;
+
+    @Column(name = "error_message" ,length = 2048,nullable = true)
+    private String errorMessage;
     @PrePersist
     public void prePersist() {
         this.createdAt = LocalDateTime.now();

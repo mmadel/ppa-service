@@ -1,7 +1,6 @@
 package com.cob.ppa.controller;
 
 import com.cob.ppa.response.patient.record.model.PatientMedicalRecordUploadResponse;
-import com.cob.ppa.service.monitor.RequestMonitorService;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecutionException;
 import org.springframework.batch.core.JobParameters;
@@ -19,7 +18,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/file/processing")
@@ -30,11 +28,9 @@ public class FileProcessingController {
 
     @Autowired
     private Job importBenefitsJob;
-    @Autowired
-    private RequestMonitorService requestMonitorService;
 
     @PostMapping("/upload")
-    public ResponseEntity test(@RequestParam("benefitFile") MultipartFile file
+    public ResponseEntity upload(@RequestParam("benefitFile") MultipartFile file
             , @RequestParam("documentFile") MultipartFile documentFile
             , @RequestParam("paymentFile") MultipartFile paymentFile, HttpServletRequest request) throws JobExecutionException, IOException {
         Path benefitTmpFile = Files.createTempFile("benefits_", ".csv");
@@ -54,8 +50,7 @@ public class FileProcessingController {
                 .toJobParameters();
 
 
-//        jobLauncher.run(importBenefitsJob, params);
-        requestMonitorService.updateLog(pmrbId,200);
+      jobLauncher.run(importBenefitsJob, params);
         return ResponseEntity.ok().body(PatientMedicalRecordUploadResponse.builder()
                 .pmrbId(pmrbId)
                 .build());

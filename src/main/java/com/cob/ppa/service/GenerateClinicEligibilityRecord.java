@@ -1,9 +1,7 @@
 package com.cob.ppa.service;
 
-import com.cob.ppa.constant.BatchStatus;
 import com.cob.ppa.constant.ClinicImportStatus;
 import com.cob.ppa.dto.PatientMedicalRecordDTO;
-import com.cob.ppa.entity.ClinicEligibilityRecord;
 import com.cob.ppa.entity.ExcelTemplate;
 import com.cob.ppa.repository.ClinicEligibilityRecordRepository;
 import com.cob.ppa.repository.ExcelTemplateRepository;
@@ -17,7 +15,6 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
