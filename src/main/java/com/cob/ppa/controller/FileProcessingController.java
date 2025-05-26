@@ -1,6 +1,7 @@
 package com.cob.ppa.controller;
 
 import com.cob.ppa.response.patient.record.model.PatientMedicalRecordUploadResponse;
+import com.cob.ppa.service.monitor.RequestMonitorService;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecutionException;
 import org.springframework.batch.core.JobParameters;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -28,11 +30,13 @@ public class FileProcessingController {
 
     @Autowired
     private Job importBenefitsJob;
+    @Autowired
+    private RequestMonitorService requestMonitorService;
 
     @PostMapping("/upload")
     public ResponseEntity test(@RequestParam("benefitFile") MultipartFile file
             , @RequestParam("documentFile") MultipartFile documentFile
-            , @RequestParam("paymentFile") MultipartFile paymentFile) throws JobExecutionException, IOException {
+            , @RequestParam("paymentFile") MultipartFile paymentFile, HttpServletRequest request) throws JobExecutionException, IOException {
         Path benefitTmpFile = Files.createTempFile("benefits_", ".csv");
         file.transferTo(benefitTmpFile);
 
@@ -41,7 +45,7 @@ public class FileProcessingController {
 
         Path paymentTmpFile = Files.createTempFile("payment_", ".csv");
         paymentFile.transferTo(paymentTmpFile);
-        String pmrbId = UUID.randomUUID().toString();
+        String pmrbId = (String) request.getAttribute("pmrbId");
         JobParameters params = new JobParametersBuilder()
                 .addString("benefitFilePath", benefitTmpFile.toString())
                 .addString("documentUnitsFilePath", documentTmpFile.toString())
@@ -50,8 +54,8 @@ public class FileProcessingController {
                 .toJobParameters();
 
 
-        jobLauncher.run(importBenefitsJob, params);
-
+//        jobLauncher.run(importBenefitsJob, params);
+        requestMonitorService.updateLog(pmrbId,200);
         return ResponseEntity.ok().body(PatientMedicalRecordUploadResponse.builder()
                 .pmrbId(pmrbId)
                 .build());
