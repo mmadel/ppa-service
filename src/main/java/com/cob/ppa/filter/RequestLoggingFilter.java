@@ -22,6 +22,7 @@ public class RequestLoggingFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain)
             throws ServletException, IOException {
+        System.out.println("Incoming URI: " + request.getRequestURI());
         long startTime = System.currentTimeMillis();
         try {
             filterChain.doFilter(request, response);
