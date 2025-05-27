@@ -8,14 +8,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/public")
 public class UserController {
     @Autowired
     FindUserService findUserService;
 
-    @GetMapping("/find")
+    @GetMapping("/ping")
     public ResponseEntity findUsers() {
         return ResponseEntity.ok()
-                .body(findUserService.findAll());
+                .body("live..!!!");
     }
 }
