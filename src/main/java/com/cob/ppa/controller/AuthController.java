@@ -110,11 +110,12 @@ public class AuthController {
 
     @PostMapping("/assign-role")
     public ResponseEntity<?> assignRole(@RequestBody RoleAssignmentRequest request) {
+        System.out.println("request.getUsername() " + request.getUsername());
         User user = userRepository.findByUsername(request.getUsername())
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        System.out.println("request.getRoleName() " + request.getRoleName());
         Role role = roleRepository.findByName(request.getRoleName())
-                .orElseThrow(() -> new ResourceNotFoundException("Role not found"));
+                .orElseThrow(() -> new RuntimeException("Role not found"));
 
         user.getRoles().add(role);
         userRepository.save(user);
