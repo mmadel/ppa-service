@@ -15,7 +15,7 @@ public class UserController {
     FindUserService findUserService;
 
     @GetMapping("/list")
-    @PreAuthorize("hasRole('ROLE_MODERATOR')")
+    @PreAuthorize("hasAnyRole('ROLE_MODERATOR','ROLE_ADMIN')")
     public ResponseEntity findUsers() {
         return ResponseEntity.ok()
                 .body(findUserService.findAll());

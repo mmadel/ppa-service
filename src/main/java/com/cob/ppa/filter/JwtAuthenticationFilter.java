@@ -25,7 +25,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain)
             throws ServletException, IOException {
-        System.out.println("JwtAuthenticationFilter");
         System.out.println("request.getRequestURI() "+ request.getRequestURI());
         try {
             String header = request.getHeader("Authorization");
@@ -73,9 +72,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 }
             }
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            System.out.println("SC_UNAUTHORIZED Invalid token");
-            System.out.println("request "+ request.getRequestURI());
             SecurityContextHolder.clearContext();
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid token");
             return;
