@@ -10,12 +10,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/clinic")
-@PreAuthorize("hasRole('ROLE_ADMIN')")
 public class ClinicController {
     @Autowired
     CacheClinicRecords cacheClinicRecords;
     @GetMapping("/find")
-    @PreAuthorize("hasAnyAuthority('USER_CREATE')")
     public ResponseEntity findAll(){
         return ResponseEntity.ok()
                 .body(cacheClinicRecords.cache());
