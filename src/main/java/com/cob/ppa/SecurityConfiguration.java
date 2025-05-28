@@ -19,7 +19,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
-@EnableWebSecurity
+@EnableWebSecurity()
+@EnableGlobalMethodSecurity(
+        prePostEnabled = true,
+        securedEnabled = true,
+        jsr250Enabled = true
+)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Autowired
     private RequestLoggingFilter requestLoggingFilter;

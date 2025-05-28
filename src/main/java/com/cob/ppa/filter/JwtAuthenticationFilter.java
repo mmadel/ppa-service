@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
@@ -47,8 +48,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     List<SimpleGrantedAuthority> authorities = new ArrayList<>();
                     if (rolesClaim instanceof List<?>) {
                         for (Object role : (List<?>) rolesClaim) {
-                            if (role instanceof String) {
-                                authorities.add(new SimpleGrantedAuthority((String) role));
+                            if (role instanceof Map) {
+                                // Extract "authority" from the LinkedHashMap
+                                Object authority = ((Map<?, ?>) role).get("authority");
+                                if (authority instanceof String) {
+                                    authorities.add(new SimpleGrantedAuthority((String) authority));
+                                }
                             }
                         }
                     }
