@@ -18,7 +18,14 @@ public class FindUserService {
 
     public List<UserDTO> findAll() {
         return userRepository.findAll().stream()
-                .map(user -> mapper.map(user, UserDTO.class))
+                .map(user -> {
+                    UserDTO dto = mapper.map(user, UserDTO.class);
+                    List<String> roles= user.getRoles().stream()
+                            .map(role -> role.getName())
+                            .collect(Collectors.toList());;
+                    dto.setRoles(roles);
+                    return dto;
+                })
                 .collect(Collectors.toList());
 
     }
