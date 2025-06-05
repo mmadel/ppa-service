@@ -26,7 +26,7 @@ public class ActivityLogController {
     public ResponseEntity searchPatientMedicalRecordsBatch(@RequestParam(name = "offset", required = false) String offset,
                                                            @RequestParam(name = "limit", required = false) String limit,
                                                            @RequestParam(name = "status", required = false) RequestStatus status,
-                                                           @RequestParam(name = "requestId", required = false) String requestId,
+                                                           @RequestParam(name = "pmrbId", required = false) String requestId,
                                                            @RequestParam(name = "userName", required = false) String userName,
                                                            @RequestParam(name = "created-at" , required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate createdAt) {
         Pageable paging = PageRequest.of(Integer.parseInt(offset), Integer.parseInt(limit), Sort.by("createdAt").descending());
