@@ -17,6 +17,7 @@ public class JobBatchConfiguration {
     @Bean
     public Job processClinicDataJob(
             ImportJobListener importJobListener,
+            Step validateStep,
             Step processBenefitsStep,
             Step processDocumentUnitsStep,
             Step processPaymentStep,
@@ -25,7 +26,8 @@ public class JobBatchConfiguration {
             Step clinicEligibilityRecordStep) {
         return jobBuilderFactory.get("processClinicDataJob")
                 .listener(importJobListener)
-                .start(processBenefitsStep)
+                .start(validateStep)
+                .next(processBenefitsStep)
                 .next(processDocumentUnitsStep)
                 .next(processPaymentStep)
                 .next(cleanupStep)

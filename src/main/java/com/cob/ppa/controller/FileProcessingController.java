@@ -1,10 +1,7 @@
 package com.cob.ppa.controller;
 
 import com.cob.ppa.response.patient.record.model.PatientMedicalRecordUploadResponse;
-import org.springframework.batch.core.Job;
-import org.springframework.batch.core.JobExecutionException;
-import org.springframework.batch.core.JobParameters;
-import org.springframework.batch.core.JobParametersBuilder;
+import org.springframework.batch.core.*;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -50,9 +47,21 @@ public class FileProcessingController {
                 .toJobParameters();
 
 
-      jobLauncher.run(importBenefitsJob, params);
-        return ResponseEntity.ok().body(PatientMedicalRecordUploadResponse.builder()
-                .pmrbId(pmrbId)
-                .build());
+        JobExecution jobExecution = jobLauncher.run(importBenefitsJob, params);
+
+        if (jobExecution.getExitStatus().getExitCode().equals("FAILED")) {
+
+            String errorMsg = jobExecution.getExecutionContext().getString("errorMessage");
+            return ResponseEntity.ok().body(PatientMedicalRecordUploadResponse.builder()
+                    .pmrbId(pmrbId)
+                    .hasError(true)
+                    .errorMessage(errorMsg)
+                    .build());
+        } else {
+            return ResponseEntity.ok().body(PatientMedicalRecordUploadResponse.builder()
+                    .pmrbId(pmrbId)
+                    .hasError(false)
+                    .build());
+        }
     }
 }

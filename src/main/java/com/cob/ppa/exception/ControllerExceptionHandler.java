@@ -19,7 +19,7 @@ import java.util.Locale;
 public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     @Autowired
     ResourceBundleMessageSource messageSource;
-    @ExceptionHandler(value = {BatchUploadException.class})
+    @ExceptionHandler(value = {Exception.class})
     public ResponseEntity handleFeedbackExceptionException(BatchUploadException ex, WebRequest request) {
         String errorMessage = messageSource.getMessage(ex.getCode(), ex.getParameters(), Locale.ENGLISH);
         ControllerErrorResponse controllerErrorResponse = new ControllerErrorResponse(errorMessage, ex.getStatus() == null ? HttpStatus.INTERNAL_SERVER_ERROR : ex.getStatus());
