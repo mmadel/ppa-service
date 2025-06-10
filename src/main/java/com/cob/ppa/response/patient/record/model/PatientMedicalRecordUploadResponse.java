@@ -9,4 +9,6 @@ import lombok.Setter;
 @Builder
 public class PatientMedicalRecordUploadResponse {
     private String pmrbId;
+    private boolean hasError;
+    private String errorMessage;
 }

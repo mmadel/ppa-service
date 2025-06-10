@@ -1,6 +1,7 @@
 package com.cob.ppa.service.batch.configuration;
 
-import com.cob.ppa.entity.ExcelTemplate;
+import com.cob.ppa.exception.HandleBatchException;
+import com.cob.ppa.exception.business.BatchUploadException;
 import com.cob.ppa.service.GenerateClinicEligibilityRecord;
 import com.cob.ppa.service.batch.JobDataHolder;
 import com.cob.ppa.service.patient.record.BuildPatientMedicalRecord;
@@ -22,6 +23,9 @@ public class ClinicEligibilityRecordConfiguration {
     BuildPatientMedicalRecord buildPatientMedicalRecord;
     @Autowired
     GenerateClinicEligibilityRecord clinicEligibilityRecord;
+    @Autowired
+    HandleBatchException handleBatchException;
+
     @Bean
     public Step clinicEligibilityRecordStep(Tasklet clinicEligibilityRecordTasklet) {
         return stepBuilderFactory.get("clinicEligibilityRecordStep")
@@ -36,7 +40,12 @@ public class ClinicEligibilityRecordConfiguration {
                                                   JobDataHolder holder) {
         return (contribution, chunkContext) -> {
             holder.getPatientMedicalRecord();
-            clinicEligibilityRecord.generate(holder.getPatientMedicalRecord(),pmrbId);
+            try {
+                clinicEligibilityRecord.generate(holder.getPatientMedicalRecord(), pmrbId);
+            } catch (BatchUploadException ex) {
+                return handleBatchException.handle(contribution, chunkContext, ex);
+            }
+
             holder.clearPatientMedicalRecord();
             return RepeatStatus.FINISHED;
         };

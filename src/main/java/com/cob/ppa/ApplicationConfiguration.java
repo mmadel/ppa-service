@@ -3,6 +3,7 @@ package com.cob.ppa;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.util.concurrent.Executor;
@@ -25,5 +26,15 @@ public class ApplicationConfiguration {
         executor.setThreadNamePrefix("AsyncMonitoring-");
         executor.initialize();
         return executor;
+    }
+    @Bean
+    public ResourceBundleMessageSource messageSource() {
+
+        ResourceBundleMessageSource source = new ResourceBundleMessageSource();
+        source.setBasenames("message/exception");
+        source.setDefaultEncoding("UTF-8");
+        source.setAlwaysUseMessageFormat(true);
+
+        return source;
     }
 }
