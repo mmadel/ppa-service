@@ -3,10 +3,8 @@ package com.cob.ppa.util;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 
 public class ExcelUtils {
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("MM/dd/yyyy");
@@ -107,11 +105,12 @@ public class ExcelUtils {
         newStyle.setBorderLeft(BorderStyle.THIN);
 
         // Special handling for dates
-        if (value instanceof Date) {
+        if (value instanceof LocalDate) {
+            cell.setCellType(CellType.NUMERIC);
             // For dates, we need to preserve both the format AND other styles
             CreationHelper createHelper = workbook.getCreationHelper();
             newStyle.setDataFormat(createHelper.createDataFormat().getFormat("MM/dd/yyyy"));
-            cell.setCellValue((Date) value);
+            cell.setCellValue((LocalDate) value);
         }
         // Handle numbers (including payment values)
         else if (value instanceof Number) {

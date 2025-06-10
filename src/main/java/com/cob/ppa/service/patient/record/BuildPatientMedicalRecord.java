@@ -52,6 +52,7 @@ public class BuildPatientMedicalRecord {
         record.setEmrId(benefitDto.getEmrId());
         record.setPatientName(benefitDto.getPatientName());
         record.setDos(benefitDto.getAppointmentDate());
+        record.setDob(benefitDto.getPatientDob());
         record.setInsuranceName(benefitDto.getPrimaryInsurance());
         record.setInsuranceId(benefitDto.getPrimaryInsurancePolicyNumber());
         record.setSecondaryInsuranceName(benefitDto.getSecondaryInsurance());

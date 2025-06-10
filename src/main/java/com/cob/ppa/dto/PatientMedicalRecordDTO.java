@@ -15,6 +15,7 @@ public class PatientMedicalRecordDTO {
     private String insuranceName;
     private String insuranceId;
     private LocalDate dos;
+    private LocalDate dob;
     private Double clientPayment;
     private BigDecimal chargeAmount;
     private String visitId;
