@@ -122,6 +122,7 @@ public class CreateClinicEligibilitySheet {
         ExcelUtils.createCell(row, 32, record.getChargeAmount(), styles[14]);
         ExcelUtils.createCell(row, 24, record.getVisitStatus(), styles[24]);
         ExcelUtils.createCell(row, 27, record.getVisitId(), styles[27]);
+        ExcelUtils.createCell(row, 28, record.getDob(), styles[28]);
         ExcelUtils.createCell(row, 29, record.getInsuranceId(), styles[29]);
         ExcelUtils.createCell(row, 30, record.getSecondaryInsuranceName(), styles[30]);
         ExcelUtils.createCell(row, 31, record.getSecondaryInsuranceId(), styles[31]);
