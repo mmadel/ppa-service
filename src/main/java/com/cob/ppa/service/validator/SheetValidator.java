@@ -22,10 +22,8 @@ public class SheetValidator {
             // Remove BOM if present (common with UTF-8 files)
             headerLine = headerLine.replace("\uFEFF", "");
 
-            String[] splitHeaders = headerLine.split("\\s*,\\s*");
-
-            Set<String> actualHeaders = Arrays.stream(splitHeaders)
-                    .map(String::trim)
+            Set<String> actualHeaders = Arrays.stream(headerLine.split("\\s*,\\s*"))
+                    .map(header -> header.trim().replaceAll("^\"|\"$", ""))
                     .collect(Collectors.toSet());
 
             List<String> missingHeaders = new ArrayList<>();
