@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import lombok.extern.slf4j.Slf4j;
+
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -30,11 +32,20 @@ import static com.cob.ppa.constant.SheetMonths.MONTH_NAMES;
 
 @Service
 @Async
+@Slf4j
 public class CreateClinicEligibilitySheet {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     public void generate(String clinicName, long cerId, List<PatientMedicalRecordDTO> records, ExcelTemplate template) {
+        log.info("Starting clinic eligibility generation | clinicName={} | cerId={} | templateId={} | templateName={} | fileType={} | dbFileSize={} | byteArrayLength={}",
+                clinicName,
+                cerId,
+                template.getId(),
+                template.getTemplateName(),
+                template.getFileType(),
+                template.getFileSize(),
+                template.getFileContent() != null ? template.getFileContent().length : null);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ZipOutputStream zipOut = new ZipOutputStream(baos);
         try (Workbook workbook = new XSSFWorkbook(new ByteArrayInputStream(template.getFileContent()))) {
@@ -58,11 +69,14 @@ public class CreateClinicEligibilitySheet {
             zipOut.putNextEntry(new ZipEntry(clinicName + "_Report.xlsx"));
             zipOut.write(clinicBaos.toByteArray());
             zipOut.closeEntry();
-            System.out.println("Location generated  : " + clinicName);
+
+            log.info("Clinic eligibility workbook generated successfully | clinicName={} | cerId={} | reportSize={}",
+                    clinicName, cerId, clinicReportBytes.length);
 
         } catch (IOException e) {
             setFailed(cerId, e.getMessage());
-            System.out.println("error:export clinic : " + clinicName);
+            log.error("Error exporting clinic eligibility sheet | clinicName={} | cerId={} | error={}",
+                    clinicName, cerId, e.getMessage(), e);
         }
 
     }

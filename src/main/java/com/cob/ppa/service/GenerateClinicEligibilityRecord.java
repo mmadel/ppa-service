@@ -13,6 +13,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Service;
+import lombok.extern.slf4j.Slf4j;
+
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -24,6 +26,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class GenerateClinicEligibilityRecord {
     @Autowired
     ClinicEligibilityRecordRepository clinicEligibilityRecordRepository;
@@ -44,13 +47,25 @@ public class GenerateClinicEligibilityRecord {
             handleError();
         else {
             template = templateRepository.findByTemplateName("eligibility_template").get();
+
+            log.info("Using Excel template | id={} | name={} | type={} | dbFileSize={}",
+                    template.getId(),
+                    template.getTemplateName(),
+                    template.getFileType(),
+                    template.getFileSize());
+
             for (var entry : pmrClinicMap.entrySet()) {
                 String clinicName = entry.getKey();
                 Optional<LocalDate> optional = getNewestDos(entry.getValue());
                 long cerId = setInit(clinicName, pmrbId, optional);
+
+                log.info("Triggering sheet generation | clinicName={} | cerId={} | recordsCount={}",
+                        clinicName, cerId, entry.getValue().size());
+
                 createClinicEligibilitySheet.generate(clinicName, cerId, entry.getValue(), template);
             }
         }
+
     }
 
     private long setInit(String clinicName, String pmrbId, Optional<LocalDate> lastUpdate) {
